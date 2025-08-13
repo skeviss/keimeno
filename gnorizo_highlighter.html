@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Γνωρίζω τον Υπολογιστή – Αντιγραφή & Επεξεργασία</title>
+  <style>
+    :root{
+      --bg:#f7f7fb; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --primary:#2563eb;
+      --accent:#fde68a; --border:#e5e7eb; --warn:#b91c1c; --ok:#166534;
+      --pencil:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; color:var(--ink); background:var(--bg);}    
+    .wrapper{max-width:1200px; margin:24px auto; padding:0 16px;}
+    h1{font-size:clamp(1.2rem, 2.5vw, 1.6rem); margin:0 0 16px}
+    .grid{display:grid; grid-template-columns:1.1fr 1fr; gap:18px}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr;}}
+
+    .panel{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 1px 6px rgba(0,0,0,.04)}
+    .panel h2{font-size:1.05rem; margin:0 0 12px}
+    .hint{color:var(--muted); font-size:.95rem}
+
+    /* Αριστερό κείμενο */
+    .article p{line-height:1.6; margin:0 0 12px}
+    .para{position:relative; padding-left:8px}
+    .para-btns{display:flex; gap:8px; margin:8px 0 14px}
+    .btn{appearance:none; border:1px solid var(--border); background:#fff; color:var(--ink); padding:8px 10px; border-radius:10px; cursor:pointer; font-size:.95rem; transition:.15s}
+    .btn:hover{border-color:#cfd4dc}
+
+    /* Highlighter (single toggle button) */
+    .highlighter{display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:10px; background:#fafafa; border:1px dashed var(--border); border-radius:12px}
+    .icon-btn{display:inline-flex; align-items:center; gap:8px; border-radius:999px; padding:8px 12px}
+    .icon-btn svg{width:18px; height:18px}
+    .icon-btn.active{background:var(--accent); border-color:var(--pencil)}
+    mark{background:var(--accent); padding:0 .15em; border-radius:4px}
+
+    /* Δεξιά editors */
+    .editor{display:flex; flex-direction:column; gap:10px; margin-bottom:14px}
+    .toolbar{display:flex; gap:8px}
+    .toolbar .btn{padding:6px 10px}
+    .editable{min-height:120px; border:1px solid var(--border); border-radius:12px; padding:10px; background:#fff; outline:none;}
+    .editable:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+
+    .font1{font-family: Georgia, "Times New Roman", Times, serif}
+    .font2{font-family: "Trebuchet MS", Tahoma, Verdana, Arial, sans-serif}
+    .font3{font-family: "Courier New", Courier, monospace}
+
+    .small{font-size:.9rem;color:var(--muted)}
+    .badge{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:999px;padding:2px 8px;font-size:.75rem;margin-left:6px}
+
+    /* Tests: κρυμμένα για καθαρή τάξη */
+    .tests{display:none}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Γνωρίζω τον Υπολογιστή – Αντιγραφή, Επικόλληση & Μορφοποίηση</h1>
+    <div class="grid">
+      <!-- ΑΡΙΣΤΕΡΑ: ΚΕΙΜΕΝΟ + HIGHLIGHTER -->
+      <section class="panel article" aria-labelledby="article-title">
+        <h2 id="article-title">Κείμενο για ανάγνωση</h2>
+        <p class="hint">Διάβασε τις παραγράφους. Πάτα το μολύβι για να ενεργοποιήσεις/απενεργοποιήσεις το highlighter. Κλικ σε κίτρινο = αφαίρεση.</p>
+
+        <div class="para" data-id="p1">
+          <strong>Παράγραφος 1 – Οι αρχαίοι και πρώιμοι υπολογισμοί</strong>
+          <p>
+            Πριν από πολλά χρόνια, οι άνθρωποι χρησιμοποιούσαν απλά εργαλεία για να κάνουν υπολογισμούς, όπως το <em>άβακας</em>.
+            Αργότερα, εφευρέθηκαν οι πρώτες μηχανές, όπως η <em>Μηχανή των Αντικυθήρων</em> στην αρχαία Ελλάδα και, πολύ πιο μετά, οι υπολογιστικές μηχανές του 19ου αιώνα.
+          </p>
+          <div class="para-btns">
+            <button class="btn" data-copy="p1">Αντιγραφή παραγράφου 1</button>
+          </div>
+        </div>
+
+        <div class="para" data-id="p2">
+          <strong>Παράγραφος 2 – Οι πρώτοι ηλεκτρονικοί υπολογιστές</strong>
+          <p>
+            Στη δεκαετία του 1940, εμφανίστηκαν οι πρώτοι ηλεκτρονικοί υπολογιστές. Ήταν τεράστιοι, καταλάμβαναν ολόκληρα δωμάτια και μπορούσαν να κάνουν λίγες μόνο εργασίες, αλλά αποτέλεσαν το ξεκίνημα της ψηφιακής εποχής.
+          </p>
+          <div class="para-btns">
+            <button class="btn" data-copy="p2">Αντιγραφή παραγράφου 2</button>
+          </div>
+        </div>
+
+        <div class="para" data-id="p3">
+          <strong>Παράγραφος 3 – Οι σύγχρονες συσκευές</strong>
+          <p>
+            Σήμερα, οι υπολογιστές χωράνε στο χέρι μας, όπως τα κινητά και τα tablets, και μας βοηθούν στη δουλειά και το σχολείο, στο παιχνίδι, στην επικοινωνία και στην ψυχαγωγία.
+          </p>
+          <div class="para-btns">
+            <button class="btn" data-copy="p3">Αντιγραφή παραγράφου 3</button>
+          </div>
+        </div>
+
+        <!-- Highlighter single-button toggle -->
+        <div class="highlighter" aria-label="Εργαλείο επισήμανσης (toggle)">
+          <button class="btn icon-btn" id="btnHl" aria-pressed="false" title="Highlighter on/off" aria-label="Highlighter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+            </svg>
+            <span class="small">Μολύβι</span>
+          </button>
+        </div>
+
+        <!-- Προαιρετικά tests (κρυμμένα) -->
+        <div class="tests">
+          <h2>Έλεγχοι / Tests</h2>
+          <div class="para-btns">
+            <button class="btn" id="t1">Test 1: Highlight επιλογή που διασχίζει <em>ετικέτες</em></button>
+            <button class="btn" id="t2">Test 2: Κλικ σε κίτρινο για αφαίρεση</button>
+            <button class="btn" id="t3">Test 3: Καθάρισε όλα</button>
+          </div>
+          <div id="testLog" class="log" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ΔΕΞΙΑ: 3 EDITORS -->
+      <section class="panel" aria-labelledby="editors-title">
+        <h2 id="editors-title">Πλαίσια επικόλλησης & μορφοποίησης</h2>
+
+        <div class="editor" data-target="p1">
+          <div>
+            <strong>1. Κάνε επικόλληση της 1ης παραγράφου</strong>
+            <span class="badge">Ζήτηση</span>
+          </div>
+          <div class="hint">Κάνε τις λέξεις <em>άβακας</em> και <em>Μηχανή των Αντικυθήρων</em> <strong>έντονες</strong>.</div>
+          <div class="toolbar" role="toolbar" aria-label="Εργαλεία μορφοποίησης 1">
+            <button class="btn" data-cmd="bold" title="Έντονα (Bold)"><b>Β</b></button>
+            <button class="btn" data-cmd="italic" title="Πλάγια (Italic)"><i>Ι</i></button>
+            <button class="btn" data-cmd="underline" title="Υπογράμμιση (Underline)"><u>Υ</u></button>
+            <button class="btn" data-clear>Καθάρισε μορφοποίηση</button>
+            <button class="btn" data-empty>Άδειασμα</button>
+          </div>
+          <div class="editable font1" contenteditable="true" aria-label="Πλαίσιο επεξεργασίας 1"></div>
+        </div>
+
+        <div class="editor" data-target="p2">
+          <div>
+            <strong>2. Κάνε επικόλληση της 2ης παραγράφου</strong>
+            <span class="badge">Ζήτηση</span>
+          </div>
+          <div class="hint">Κάνε τη φράση <em>εμφανίστηκαν οι πρώτοι ηλεκτρονικοί υπολογιστές</em> <em>πλάγια</em>.</div>
+          <div class="toolbar" role="toolbar" aria-label="Εργαλεία μορφοποίησης 2">
+            <button class="btn" data-cmd="bold"><b>Β</b></button>
+            <button class="btn" data-cmd="italic"><i>Ι</i></button>
+            <button class="btn" data-cmd="underline"><u>Υ</u></button>
+            <button class="btn" data-clear>Καθάρισε μορφοποίηση</button>
+            <button class="btn" data-empty>Άδειασμα</button>
+          </div>
+          <div class="editable font2" contenteditable="true" aria-label="Πλαίσιο επεξεργασίας 2"></div>
+        </div>
+
+        <div class="editor" data-target="p3">
+          <div>
+            <strong>3. Κάνε επικόλληση της 3ης παραγράφου</strong>
+            <span class="badge">Ζήτηση</span>
+          </div>
+          <div class="hint"><u>Υπογράμμισε</u> το κομμάτι που εξηγεί πώς χρησιμοποιούνται σήμερα οι υπολογιστές.</div>
+          <div class="toolbar" role="toolbar" aria-label="Εργαλεία μορφοποίησης 3">
+            <button class="btn" data-cmd="bold"><b>Β</b></button>
+            <button class="btn" data-cmd="italic"><i>Ι</i></button>
+            <button class="btn" data-cmd="underline"><u>Υ</u></button>
+            <button class="btn" data-clear>Καθάρισε μορφοποίηση</button>
+            <button class="btn" data-empty>Άδειασμα</button>
+          </div>
+          <div class="editable font3" contenteditable="true" aria-label="Πλαίσιο επεξεργασίας 3"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --- Βοηθητικά ---
+    const articleEl = document.querySelector('.article');
+    const logEl = document.getElementById('testLog');
+    function log(msg, ok=true){ if(!logEl) return; logEl.innerHTML += (ok? '✅ ' : '❌ ') + msg + "\\n"; }
+
+    // --- Αντιγραφή παραγράφων ---
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const id = btn.getAttribute('data-copy');
+        const block = document.querySelector('.para[data-id="'+id+'"] p');
+        if(!block) return;
+        const text = block.innerText.trim();
+        try{
+          await navigator.clipboard.writeText(text);
+          btn.textContent='Αντιγράφηκε!';
+          setTimeout(()=>btn.textContent='Αντιγραφή παραγράφου ' + id.replace('p',''),1200);
+        }catch(e){
+          // Fallback: selection copy
+          const sel = window.getSelection(); const range = document.createRange();
+          range.selectNodeContents(block); sel.removeAllRanges(); sel.addRange(range); document.execCommand('copy'); sel.removeAllRanges();
+          btn.textContent='Αντιγράφηκε!'; setTimeout(()=>btn.textContent='Αντιγραφή παραγράφου ' + id.replace('p',''),1200);
+        }
+      })
+    })
+
+    // --- Highlighter (non-destructive, toggle on/off + click-to-remove) ---
+    const btnHl = document.getElementById('btnHl');
+    let highlightOn = false;
+
+    function setToggleUI(){
+      btnHl.classList.toggle('active', highlightOn);
+      btnHl.setAttribute('aria-pressed', String(highlightOn));
+    }
+    btnHl.addEventListener('click', ()=>{ highlightOn = !highlightOn; setToggleUI(); });
+    setToggleUI();
+
+    function isText(node){ return node && node.nodeType === Node.TEXT_NODE; }
+
+    function nextTextNode(root, fromNode){
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.nodeValue.trim().length ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+      let n;
+      while((n = walker.nextNode())){
+        if(n === fromNode){ break; }
+      }
+      return walker.nextNode(); // next after fromNode
+    }
+
+    function prevTextNode(root, fromNode){
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.nodeValue.trim().length ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+      let prev=null, n;
+      while((n = walker.nextNode())){
+        if(n === fromNode) return prev;
+        prev = n;
+      }
+      return prev;
+    }
+
+    function normalizeBoundary(container, offset, forward){
+      if(isText(container)) return { node: container, offset };
+      let node = container.childNodes[offset] || (forward ? container.lastChild : container.firstChild);
+      if(!node){
+        const alt = forward ? nextTextNode(articleEl, container) : prevTextNode(articleEl, container);
+        return { node: alt, offset: 0 };
+      }
+      while(node && node.firstChild) node = node.firstChild;
+      if(isText(node)) return { node, offset: forward ? 0 : node.length };
+      const alt2 = forward ? nextTextNode(articleEl, node) : prevTextNode(articleEl, node);
+      return { node: alt2, offset: 0 };
+    }
+
+    function wrapTextPortion(node, start, end){
+      if(!isText(node)) return null;
+      const length = node.length;
+      const safeStart = Math.max(0, Math.min(start, length));
+      const safeEnd = Math.max(0, Math.min(end, length));
+      if(safeStart >= safeEnd) return null;
+      let middle = node;
+      if(safeEnd < length) middle = node.splitText(safeEnd);
+      if(safeStart > 0) middle = middle.splitText(safeStart);
+      const mark = document.createElement('mark');
+      middle.parentNode.insertBefore(mark, middle);
+      mark.appendChild(middle);
+      return mark;
+    }
+
+    function mergeAdjacentMarksAround(node){
+      let base = node && node.nodeType===1 && node.tagName==='MARK' ? node : node?.parentNode;
+      if(!base || base.tagName!=='MARK') return;
+      // merge previous
+      let prev = base.previousSibling;
+      if(prev && prev.nodeType===1 && prev.tagName==='MARK'){
+        while(base.firstChild) prev.appendChild(base.firstChild);
+        base.remove(); base = prev;
+      }
+      // merge next
+      let next = base.nextSibling;
+      if(next && next.nodeType===1 && next.tagName==='MARK'){
+        while(next.firstChild) base.appendChild(next.firstChild);
+        next.remove();
+      }
+    }
+
+    function highlightCurrentSelection(){
+      const sel = window.getSelection();
+      if(!sel || sel.rangeCount===0) return;
+      const range = sel.getRangeAt(0);
+      if(range.collapsed) return;
+
+      // Περιορισμός στο αριστερό κείμενο
+      const ancestor = range.commonAncestorContainer.nodeType===1 ? range.commonAncestorContainer : range.commonAncestorContainer.parentNode;
+      if(!articleEl.contains(ancestor)) return;
+
+      // Κανονικοποίηση ορίων ώστε να πέφτουν σε text nodes
+      let { node: startNode, offset: startOffset } = normalizeBoundary(range.startContainer, range.startOffset, true);
+      let { node: endNode, offset: endOffset } = normalizeBoundary(range.endContainer, range.endOffset, false);
+      if(!startNode || !endNode) return;
+
+      if(startNode === endNode && startOffset > endOffset){ const tmp=startOffset; startOffset=endOffset; endOffset=tmp; }
+
+      if(startNode === endNode){
+        const m = wrapTextPortion(startNode, startOffset, endOffset);
+        if(m) mergeAdjacentMarksAround(m);
+        sel.removeAllRanges();
+        return;
+      }
+
+      // 1) από startOffset ως τέλος startNode
+      const m1 = wrapTextPortion(startNode, startOffset, startNode.length);
+      if(m1) mergeAdjacentMarksAround(m1);
+
+      // 2) ενδιάμεσα πλήρη text nodes
+      const walker = document.createTreeWalker(articleEl, NodeFilter.SHOW_TEXT, { acceptNode: n => n.nodeValue.trim().length ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+      let collecting = false, n;
+      while((n = walker.nextNode())){
+        if(n === startNode){ collecting = true; continue; }
+        if(n === endNode){ break; }
+        if(collecting){
+          const m = wrapTextPortion(n, 0, n.length);
+          if(m) mergeAdjacentMarksAround(m);
+        }
+      }
+
+      // 3) από αρχή endNode ως endOffset
+      const m3 = wrapTextPortion(endNode, 0, endOffset);
+      if(m3) mergeAdjacentMarksAround(m3);
+
+      sel.removeAllRanges();
+    }
+
+    // Ενεργοποίηση: όταν ο χρήστης ολοκληρώνει επιλογή
+    document.addEventListener('mouseup', ()=>{ if(highlightOn) highlightCurrentSelection(); });
+    document.addEventListener('keyup', (e)=>{ if(highlightOn && (e.key==='Enter' || e.key===' ')) highlightCurrentSelection(); });
+
+    // Κλικ πάνω σε mark για αφαίρεση
+    function unwrap(el){ const p=el.parentNode; while(el.firstChild) p.insertBefore(el.firstChild, el); el.remove(); }
+    articleEl.addEventListener('click', (e)=>{
+      const m = e.target.closest('mark');
+      if(m && articleEl.contains(m)) unwrap(m);
+    });
+
+    // --- Toolbars για editors ---
+    document.querySelectorAll('.editor').forEach(section=>{
+      const area = section.querySelector('.editable');
+      section.querySelectorAll('[data-cmd]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{ area.focus(); document.execCommand(btn.getAttribute('data-cmd'), false, null); })
+      });
+      section.querySelector('[data-clear]').addEventListener('click', ()=>{ area.focus(); document.execCommand('removeFormat', false, null); });
+      section.querySelector('[data-empty]').addEventListener('click', ()=>{ area.innerHTML=''; area.focus(); });
+    })
+
+    // --- Optional hidden tests (leave for debugging) ---
+    (function setupHiddenTests(){
+      const t1 = document.getElementById('t1');
+      if(!t1) return;
+      document.getElementById('t1').addEventListener('click', ()=>{
+        logEl.textContent = '';
+        const p = document.querySelector('.para[data-id="p1"] p');
+        const startNode = p.querySelector('em').firstChild;
+        const endNode = p.childNodes[p.childNodes.length-1];
+        const r = document.createRange();
+        r.setStart(startNode, 0);
+        const endText = endNode.nodeType===3 ? endNode : endNode.firstChild;
+        const endOffset = Math.min(20, (endText?.length||1));
+        r.setEnd(endText, endOffset);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        highlightOn = true; setToggleUI();
+        try { highlightCurrentSelection(); log('Test 1: Επιτυχής επισήμανση χωρίς σφάλμα και χωρίς απώλειες κειμένου.', true);} catch(e){ log('Test 1: Προέκυψε σφάλμα '+e.message, false);}    
+      });
+      document.getElementById('t2').addEventListener('click', ()=>{
+        const m = articleEl.querySelector('mark');
+        if(!m){ log('Test 2: Δεν υπάρχει mark από το Test 1.', false); return; }
+        try { unwrap(m); log('Test 2: Η αφαίρεση με κλικ λειτούργησε χωρίς να χαθεί κείμενο.', true);} catch(e){ log('Test 2: Σφάλμα στην αφαίρεση: '+e.message, false);} 
+      });
+      document.getElementById('t3').addEventListener('click', ()=>{
+        try { articleEl.querySelectorAll('mark').forEach(unwrap); log('Test 3: Όλες οι επισημάνσεις καθαρίστηκαν.', true);} catch(e){ log('Test 3: Σφάλμα στο καθάρισμα: '+e.message, false);} 
+      });
+    })();
+  </script>
+</body>
+</html>
